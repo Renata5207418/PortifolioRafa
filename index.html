@@ -611,8 +611,7 @@
 
         function fecharModal() {
             document.getElementById('modalOrcamento').style.display = 'none';
-            document.body.classList.remove('modal-aberto');
-            // Restaura o modal para a visão do formulário para próximos usos
+            document.body.classList.remove('modal-aberto');            
             setTimeout(() => {
                 document.getElementById('formContainer').style.display = 'block';
                 document.getElementById('msgSucesso').style.display = 'none';
