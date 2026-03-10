@@ -67,7 +67,7 @@ portfolio-rafa-scharf
 
 1. **Clone o repositório:**
 ```bash
-git clone https://github.com/Renata5207418/portfolio-rafa-scharf.git
+git clone https://github.com/Renata5207418/PortifolioRafa.git
 
 ```
 

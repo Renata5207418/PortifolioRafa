@@ -33,6 +33,11 @@
             line-height: 1.6;
         }
 
+        /* Trava o scroll quando o modal está aberto */
+        body.modal-aberto {
+            overflow: hidden;
+        }
+
         h1, h2, h3 {
             font-family: 'Playfair Display', serif;
             font-weight: 400;
@@ -63,11 +68,10 @@
             box-shadow: 0 2px 10px rgba(0,0,0,0.05);
         }
 
-        /* AJUSTE: Container para alinhar imagem e texto no cabeçalho */
         .logo-container {
             display: flex;
             align-items: center;
-            gap: 15px; /* Define a distância entre a imagem e o texto */
+            gap: 15px;
         }
 
         .logo-header {
@@ -128,6 +132,7 @@
         }
 
         .btn {
+            display: inline-block;
             padding: 15px 30px;
             background-color: var(--cor-texto);
             color: #fff;
@@ -135,6 +140,8 @@
             letter-spacing: 1px;
             font-size: 0.9rem;
             transition: background-color 0.3s;
+            border: none;
+            cursor: pointer;
         }
 
         .btn:hover {
@@ -169,7 +176,7 @@
             text-align: justify;
         }
 
-        /* === SEÇÃO PROJETOS (CARROSSEL) === */
+        /* === SEÇÃO PROJETOS === */
         .projetos {
             padding: 100px 5%;
             background-color: #fff;
@@ -180,11 +187,6 @@
         .projetos-header {
             text-align: center;
             margin-bottom: 60px;
-        }
-
-        .projetos-header h2 {
-            font-size: 2.5rem;
-            color: var(--cor-destaque);
         }
 
         .carrossel-viewport {
@@ -198,7 +200,6 @@
             display: flex;
             gap: 20px;
             transition: transform 0.5s ease-in-out;
-            will-change: transform;
         }
 
         .projeto-item {
@@ -207,6 +208,7 @@
             overflow: hidden;
             border-radius: 4px;
             height: 400px;
+            cursor: zoom-in; /* Cursor indicando zoom */
         }
 
         .projeto-item img {
@@ -214,10 +216,6 @@
             height: 100%;
             object-fit: cover;
             transition: transform 0.5s ease;
-        }
-
-        .projeto-item:hover img {
-            transform: scale(1.05);
         }
 
         .projeto-info {
@@ -232,42 +230,108 @@
             transition: opacity 0.3s ease;
         }
 
-        .projeto-item:hover .projeto-info {
-            opacity: 1;
-        }
+        .projeto-item:hover .projeto-info { opacity: 1; }
+        .projeto-item:hover img { transform: scale(1.05); }
 
         .nav-carrossel {
             position: absolute;
-            top: 55%;
-            width: 100%;
-            left: 0;
-            display: flex;
-            justify-content: space-between;
-            padding: 0 2%;
-            pointer-events: none;
-            z-index: 10;
+            top: 55%; width: 100%; left: 0;
+            display: flex; justify-content: space-between;
+            padding: 0 2%; z-index: 10; pointer-events: none;
         }
 
         .seta {
-            background: rgba(255, 255, 255, 0.9);
-            border: none;
-            width: 50px;
-            height: 50px;
-            border-radius: 50%;
-            cursor: pointer;
-            pointer-events: auto;
-            font-size: 1.2rem;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-            transition: 0.3s;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+            background: rgba(255, 255, 255, 0.9); border: none;
+            width: 50px; height: 50px; border-radius: 50%;
+            cursor: pointer; pointer-events: auto;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1); transition: 0.3s;
         }
 
-        .seta:hover {
-            background-color: var(--cor-destaque);
-            color: white;
+        .seta:hover { background-color: var(--cor-destaque); color: white; }
+
+        /* === LIGHTBOX (ZOOM) === */
+        #lightbox {
+            display: none;
+            position: fixed;
+            z-index: 3000;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: rgba(0,0,0,0.9);
+            align-items: center; justify-content: center;
         }
+        #lightbox img {
+            max-width: 90%; max-height: 80vh;
+            box-shadow: 0 0 20px rgba(0,0,0,0.5);
+            border-radius: 4px;
+        }
+        .fechar-zoom {
+            position: absolute;
+            top: 30px; right: 40px;
+            color: white; font-size: 40px; cursor: pointer;
+        }
+
+        /* === FORMULÁRIO MODAL === */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            z-index: 2000;
+            left: 0; top: 0;
+            width: 100%; height: 100%;
+            background-color: rgba(0,0,0,0.8);
+            align-items: center; justify-content: center;
+            backdrop-filter: blur(5px);
+        }
+
+        .modal-content {
+            background: var(--cor-fundo);
+            padding: 40px;
+            border-radius: 12px;
+            width: 95%;
+            max-width: 700px;
+            position: relative;
+            max-height: 90vh;
+            overflow-y: auto;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.3);
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            text-align: left;
+        }
+
+        .full-width { grid-column: span 2; }
+
+        .modal-content label {
+            font-size: 0.85rem;
+            font-weight: 600;
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        .modal-content input, .modal-content select, .modal-content textarea {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-family: 'Montserrat', sans-serif;
+        }
+
+        .checkbox-group {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            font-size: 0.8rem;
+        }
+
+        .checkbox-group label { font-weight: 400; display: flex; align-items: center; gap: 8px; }
+        .checkbox-group input { width: auto; }
+
+        /* TELA DE SUCESSO NO MODAL */
+        #msgSucesso { display: none; text-align: center; padding: 40px 0; }
+        #msgSucesso h3 { color: var(--cor-destaque); font-size: 2rem; margin-bottom: 15px; }
+        #msgSucesso p { color: #555; margin-bottom: 20px; }
 
         /* === SEÇÃO CONTATO === */
         .contato {
@@ -276,64 +340,24 @@
             background-color: var(--cor-fundo);
         }
 
-        .contato h2 {
-            font-size: 2.5rem;
-            margin-bottom: 20px;
-            color: var(--cor-destaque);
-        }
-
-        .contato p {
-            margin-bottom: 40px;
-            color: #555;
-        }
-
-        .contatos-links a {
-            display: inline-block;
-            margin: 0 15px;
-            font-size: 1.1rem;
-            font-weight: 600;
-        }
-
-        .contatos-links a:hover {
-            color: var(--cor-destaque);
-        }
+        .contato h2 { font-size: 2.5rem; color: var(--cor-destaque); margin-bottom: 20px; }
+        .contatos-links a { display: inline-block; margin: 0 15px; font-weight: 600; }
 
         /* === RODAPÉ === */
-        footer {
-            text-align: center;
-            padding: 30px;
-            background-color: #222;
-            color: #aaa;
-            font-size: 0.8rem;
-        }
+        footer { text-align: center; padding: 30px; background-color: #222; color: #aaa; font-size: 0.8rem; }
 
         /* === RESPONSIVIDADE === */
-        @media (max-width: 1024px) {
-            .projeto-item {
-                flex: 0 0 calc(50% - 10px);
-            }
-        }
-
         @media (max-width: 768px) {
-            .sobre {
-                grid-template-columns: 1fr;
-            }
-            .hero h1 {
-                font-size: 2.5rem;
-            }
-            .hero-logo {
-                width: 180px; 
-            }
-            .projeto-item {
-                flex: 0 0 100%;
-            }
-            nav ul {
-                display: none; 
-            }
-            /* Esconde o texto da logo no celular para não quebrar a barra */
-            .logo {
-                font-size: 1.1rem;
-            }
+            .sobre { grid-template-columns: 1fr; }
+            .hero h1 { font-size: 2.5rem; }
+            .projeto-item { flex: 0 0 100%; }
+            nav ul { display: none; }
+            
+            /* Ajuste do Formulário no Celular */
+            .form-grid { grid-template-columns: 1fr; }
+            .full-width { grid-column: span 1; }
+            .checkbox-group { grid-template-columns: 1fr; }
+            .modal-content { padding: 25px; }
         }
     </style>
 </head>
@@ -358,12 +382,10 @@
         <img src="img/logo.png" alt="Logo Rafa Scharf Design de Interiores" class="hero-logo">
         <h1>Design com Propósito</h1>
         <p>Transformando espaços em experiências únicas e acolhedoras.</p>
-        <a href="#projetos" class="btn">Ver Projetos</a>
     </section>
 
     <section id="sobre" class="sobre">
         <img src="img/rafa.jpeg" alt="Foto da Designer" class="sobre-img">
-        
         <div class="sobre-texto">
             <h2>Olá, eu sou a Rafa</h2>
             <p>Designer de Interiores apaixonada por transformar espaços em experiências.</p>
@@ -386,67 +408,161 @@
 
         <div class="carrossel-viewport">
             <div class="grid-projetos" id="carrosselTrack">
-                
-                <div class="projeto-item">
-                    <img src="img/img_1.jpeg" alt="Sala de Estar Minimalista">
-                    <div class="projeto-info">
-                        <h3>Varanda Gourmet</h3>
-                        <p>Ambiente integrado para receber</p>
-                    </div>
+                <div class="projeto-item" onclick="abrirZoom(this)">
+                    <img src="img/img_01.png" alt="Varanda Gourmet">
+                    <div class="projeto-info"><h3>Varanda Gourmet</h3><p>Ambiente integrado para receber</p></div>
                 </div>
-
-                <div class="projeto-item">
-                    <img src="img/img_7.jpeg" alt="Escritório">
-                    <div class="projeto-info">
-                        <h3>Home Office</h3>
-                        <p>Foco e organização com suavidade</p>
-                    </div>
+                <div class="projeto-item" onclick="abrirZoom(this)">
+                    <img src="img/img_02.png" alt="Home Office">
+                    <div class="projeto-info"><h3>Home Office</h3><p>Foco e organização</p></div>
                 </div>
-
-                <div class="projeto-item">
-                    <img src="img/img_8.jpeg" alt="Sala TV">
-                    <div class="projeto-info">
-                        <h3>Sala de TV</h3>
-                        <p>Marcenaria inteligente e toques de cor</p>
-                    </div>
+                <div class="projeto-item" onclick="abrirZoom(this)">
+                    <img src="img/img_03.png" alt="Sala TV">
+                    <div class="projeto-info"><h3>Sala de TV</h3><p>Marcenaria inteligente</p></div>
                 </div>
-
-                <div class="projeto-item">
-                    <img src="img/img_9.jpeg" alt="Apartamento">
-                    <div class="projeto-info">
-                        <h3>Loft Integrado</h3>
-                        <p>Conceito aberto e sofisticação</p>
-                    </div>
+                <div class="projeto-item" onclick="abrirZoom(this)">
+                    <img src="img/img_04.png" alt="Loft">
+                    <div class="projeto-info"><h3>Loft Integrado</h3><p>Conceito aberto</p></div>
                 </div>
-
-                <div class="projeto-item">
-                    <img src="img/img_10.jpeg" alt="Cozinha">
-                    <div class="projeto-info">
-                        <h3>Cozinha Ampla</h3>
-                        <p>Conceito moderno e sofisticado</p>
-                    </div>
+                <div class="projeto-item" onclick="abrirZoom(this)">
+                    <img src="img/img_05.png" alt="Cozinha">
+                    <div class="projeto-info"><h3>Cozinha Ampla</h3><p>Modernidade</p></div>
                 </div>
-
-                <div class="projeto-item">
-                    <img src="img/img_6.jpeg" alt="Quarto Casal">
-                    <div class="projeto-info">
-                        <h3>Quarto Casal</h3>
-                        <p>Conceito sofisticado e aconchegante</p>
-                    </div>
+                <div class="projeto-item" onclick="abrirZoom(this)">
+                    <img src="img/img_06.png" alt="Quarto">
+                    <div class="projeto-info"><h3>Quarto Casal</h3><p>Aconchego e sofisticação</p></div>
                 </div>
-
             </div>
         </div>
     </section>
 
+    <div id="lightbox" onclick="fecharZoom()">
+        <span class="fechar-zoom">&times;</span>
+        <img id="imgZoom" src="" alt="Zoom">
+    </div>
+
+    <div id="modalOrcamento" class="modal-overlay">
+        <div class="modal-content">
+            <span onclick="fecharModal()" style="position: absolute; right: 20px; top: 15px; cursor: pointer; font-size: 28px;">&times;</span>
+            
+            <div id="formContainer">
+                <h2 style="color: var(--cor-destaque); margin-bottom: 10px;">Pré-Briefing de Projeto</h2>
+                <p style="font-size: 0.9rem; margin-bottom: 25px;">Conte-me sobre seu espaço para que eu possa preparar sua proposta.</p>
+                
+                <form id="meuForm" name="briefing-projeto" method="POST" data-netlify="true" class="form-grid">
+                    <input type="hidden" name="form-name" value="briefing-projeto" />
+
+                    <div class="full-width">
+                        <label>1. Nome Completo</label>
+                        <input type="text" name="nome" required>
+                    </div>
+
+                    <div>
+                        <label>2. WhatsApp</label>
+                        <input type="tel" name="whatsapp" required placeholder="(00) 00000-0000">
+                    </div>
+
+                    <div>
+                        <label>3. E-mail</label>
+                        <input type="email" name="email" required>
+                    </div>
+
+                    <div>
+                        <label>4. Tipo de Projeto</label>
+                        <select name="tipo_projeto">
+                            <option value="Residencial">Residencial</option>
+                            <option value="Comercial">Comercial</option>
+                        </select>
+                    </div>
+
+                    <div>
+                        <label>5. Tipo de Imóvel</label>
+                        <select name="tipo_imovel">
+                            <option value="Apartamento">Apartamento</option>
+                            <option value="Casa">Casa</option>
+                            <option value="Sala comercial">Sala comercial</option>
+                            <option value="Loja">Loja</option>
+                            <option value="Outro">Outro</option>
+                        </select>
+                    </div>
+
+                    <div class="full-width">
+                        <label>6. Cidade / Estado</label>
+                        <input type="text" name="localizacao" required>
+                    </div>
+
+                    <div class="full-width">
+                        <label>7. Quais ambientes você deseja projetar?</label>
+                        <input type="text" name="ambientes" placeholder="Ex: sala e cozinha / quarto">
+                    </div>
+
+                    <div class="full-width">
+                        <label>8. O que você busca no projeto?</label>
+                        <div class="checkbox-group">
+                            <label><input type="checkbox" name="objetivo" value="Espaço"> Melhor aproveitamento</label>
+                            <label><input type="checkbox" name="objetivo" value="Renovar"> Renovar ambiente</label>
+                            <label><input type="checkbox" name="objetivo" value="Completo"> Projeto completo</label>
+                            <label><input type="checkbox" name="objetivo" value="Moveis"> Móveis planejados</label>
+                            <label><input type="checkbox" name="objetivo" value="Decor"> Decoração</label>
+                            <label><input type="checkbox" name="objetivo" value="Outro"> Outro</label>
+                        </div>
+                    </div>
+
+                    <div>
+                        <label>9. Área aproximada (m²)</label>
+                        <input type="text" name="area" placeholder="Ex: 50m²">
+                    </div>
+
+                    <div>
+                        <label>10. Prazo pretendido</label>
+                        <select name="prazo">
+                            <option value="Sem prazo">Não tenho prazo</option>
+                            <option value="3 meses">Até 3 meses</option>
+                            <option value="6 meses">Até 6 meses</option>
+                            <option value="Mais 6 meses">Mais de 6 meses</option>
+                        </select>
+                    </div>
+
+                    <div class="full-width">
+                        <label>11. Investimento estimado para execução</label>
+                        <select name="investimento">
+                            <option value="Nao definido">Ainda não definido</option>
+                            <option value="Até 10k">Até R$10 mil</option>
+                            <option value="10k-30k">R$10 mil a R$30 mil</option>
+                            <option value="30k-80k">R$30 mil a R$80 mil</option>
+                            <option value="Acima 80k">Acima de R$80 mil</option>
+                        </select>
+                    </div>
+
+                    <div class="full-width">
+                        <label>12. Conte um pouco mais sobre o que você imagina:</label>
+                        <textarea name="mensagem" rows="3"></textarea>
+                    </div>
+
+                    <div class="full-width">
+                        <button type="submit" class="btn" style="width: 100%;">Enviar Solicitação</button>
+                    </div>
+                </form>
+            </div>
+
+            <div id="msgSucesso">
+                <h3>Mensagem Enviada!</h3>
+                <p>Obrigada. Recebi seus dados e entrarei em contato pelo WhatsApp em até 24h para conversarmos sobre seu projeto.</p>
+                <button onclick="fecharModal()" class="btn">Fechar</button>
+            </div>
+            
+        </div>
+    </div>
+
     <section id="contato" class="contato">   
         <h2>Vamos conversar?</h2>
-        <p>Transforme o seu sonho de ter um ambiente perfeito em realidade.</p>
-        
+        <p>Transforme o seu sonho em realidade.</p>
+        <button onclick="abrirModal()" class="btn">Solicitar Orçamento</button>
+        <br><br>
         <div class="contatos-links">
-            <a href="mailto:rafa.bscharf@gmail.com" title="Clique para enviar um e-mail">E-mail</a> | 
+            <a href="mailto:rafa.bscharf@gmail.com">E-mail</a> | 
             <a href="https://wa.me/5541997116305" target="_blank">WhatsApp</a> | 
-            <a href="https://www.instagram.com/rafa.scharf?utm_source=ig_web_button_share_sheet&igsh=ZDNlZDc0MzIxNw==" target="_blank">Instagram</a>
+            <a href="https://www.instagram.com/rafa.scharf" target="_blank">Instagram</a>
         </div>
     </section>
 
@@ -455,33 +571,77 @@
     </footer>
 
     <script>
+        /* LÓGICA DO CARROSSEL */
         const track = document.getElementById('carrosselTrack');
         const nextBtn = document.getElementById('nextBtn');
         const prevBtn = document.getElementById('prevBtn');
         let index = 0;
 
         function updateCarrossel() {
-            const itemWidth = document.querySelector('.projeto-item').offsetWidth + 20; 
-            const maxIndex = track.children.length - (window.innerWidth > 768 ? 3 : 1);
+            const items = document.querySelectorAll('.projeto-item');
+            const itemWidth = items[0].offsetWidth + 20; 
+            const visibleItems = window.innerWidth > 1024 ? 3 : (window.innerWidth > 768 ? 2 : 1);
+            const maxIndex = items.length - visibleItems;
             
-            if (index > maxIndex) index = 0; // Volta ao início se chegar no fim
-            if (index < 0) index = maxIndex; // Vai para o fim se voltar do início
+            if (index > maxIndex) index = 0;
+            if (index < 0) index = maxIndex;
 
             track.style.transform = `translateX(-${index * itemWidth}px)`;
         }
 
-        nextBtn.addEventListener('click', () => {
-            index++;
-            updateCarrossel();
-        });
-
-        prevBtn.addEventListener('click', () => {
-            index--;
-            updateCarrossel();
-        });
-      
+        nextBtn.addEventListener('click', () => { index++; updateCarrossel(); });
+        prevBtn.addEventListener('click', () => { index--; updateCarrossel(); });
         window.addEventListener('resize', updateCarrossel);
-    </script>
 
+        /* ZOOM (LIGHTBOX) */
+        function abrirZoom(elemento) {
+            const src = elemento.querySelector('img').src;
+            document.getElementById('imgZoom').src = src;
+            document.getElementById('lightbox').style.display = 'flex';
+        }
+        function fecharZoom() {
+            document.getElementById('lightbox').style.display = 'none';
+        }
+
+        /* LÓGICA DO MODAL */
+        function abrirModal() {
+            document.getElementById('modalOrcamento').style.display = 'flex';
+            document.body.classList.add('modal-aberto');
+        }
+
+        function fecharModal() {
+            document.getElementById('modalOrcamento').style.display = 'none';
+            document.body.classList.remove('modal-aberto');
+            // Restaura o modal para a visão do formulário para próximos usos
+            setTimeout(() => {
+                document.getElementById('formContainer').style.display = 'block';
+                document.getElementById('msgSucesso').style.display = 'none';
+                document.getElementById('meuForm').reset();
+            }, 500);
+        }
+
+        window.onclick = function(event) {
+            const modal = document.getElementById('modalOrcamento');
+            if (event.target == modal) { fecharModal(); }
+        }
+
+        /* LÓGICA DE ENVIO (NETLIFY + SUCESSO NO MODAL) */
+        const formulario = document.getElementById('meuForm');
+        formulario.onsubmit = function(e) {
+            e.preventDefault();
+            const formData = new FormData(formulario);
+            fetch("/", {
+                method: "POST",
+                headers: { "Content-Type": "application/x-www-form-urlencoded" },
+                body: new URLSearchParams(formData).toString(),
+            })
+            .then(() => {
+                // Esconde o formulário e mostra a mensagem de sucesso
+                document.getElementById('formContainer').style.display = 'none';
+                document.getElementById('msgSucesso').style.display = 'block';
+            })
+            .catch((error) => alert("Erro ao enviar: " + error));
+        };
+    </script>
 </body>
 </html>
