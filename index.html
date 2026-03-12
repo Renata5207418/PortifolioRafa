@@ -208,7 +208,7 @@
             overflow: hidden;
             border-radius: 4px;
             height: 400px;
-            cursor: zoom-in; /* Cursor indicando zoom */
+            cursor: zoom-in;
         }
 
         .projeto-item img {
@@ -249,26 +249,57 @@
 
         .seta:hover { background-color: var(--cor-destaque); color: white; }
 
-        /* === LIGHTBOX (ZOOM) === */
+        /* === LIGHTBOX (ZOOM COM NAVEGAÇÃO) === */
         #lightbox {
             display: none;
             position: fixed;
             z-index: 3000;
             top: 0; left: 0;
             width: 100%; height: 100%;
-            background: rgba(0,0,0,0.9);
+            background: rgba(0,0,0,0.95);
             align-items: center; justify-content: center;
         }
+        
         #lightbox img {
-            max-width: 90%; max-height: 80vh;
+            max-width: 85%; max-height: 85vh;
             box-shadow: 0 0 20px rgba(0,0,0,0.5);
             border-radius: 4px;
+            transition: opacity 0.3s;
         }
+
         .fechar-zoom {
             position: absolute;
             top: 30px; right: 40px;
             color: white; font-size: 40px; cursor: pointer;
+            z-index: 3001;
         }
+
+        /* Novas setas exclusivas para o modo Zoom */
+        .seta-zoom {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            border: none;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background 0.3s;
+            z-index: 3001;
+        }
+
+        .seta-zoom:hover {
+            background: rgba(255, 255, 255, 0.4);
+        }
+
+        .seta-esq { left: 30px; }
+        .seta-dir { right: 30px; }
 
         /* === FORMULÁRIO MODAL === */
         .modal-overlay {
@@ -348,11 +379,24 @@
 
         /* === RESPONSIVIDADE === */
         @media (max-width: 768px) {
-            .sobre { grid-template-columns: 1fr; }
+            .sobre { 
+                grid-template-columns: 1fr; 
+                padding: 60px 5%; 
+            }
+            .sobre-texto p {
+                text-align: left; 
+            }
             .hero h1 { font-size: 2.5rem; }
             .projeto-item { flex: 0 0 100%; }
             nav ul { display: none; }
             
+            /* Ajuste do Zoom no Celular */
+            .seta-zoom { width: 40px; height: 40px; font-size: 16px; }
+            .seta-esq { left: 10px; }
+            .seta-dir { right: 10px; }
+            .fechar-zoom { top: 15px; right: 20px; font-size: 30px; }
+            #lightbox img { max-width: 95%; }
+
             /* Ajuste do Formulário no Celular */
             .form-grid { grid-template-columns: 1fr; }
             .full-width { grid-column: span 1; }
@@ -409,36 +453,96 @@
         <div class="carrossel-viewport">
             <div class="grid-projetos" id="carrosselTrack">
                 <div class="projeto-item" onclick="abrirZoom(this)">
-                    <img src="img/img_01.png" alt="Varanda Gourmet">
-                    <div class="projeto-info"><h3>Varanda Gourmet</h3><p>Ambiente integrado para receber</p></div>
+                    <img src="img/img_12.png" alt="Estudo de Quarto">
+                    <div class="projeto-info">
+                        <h3>Estudo de Quarto</h3>
+                        <p>Concept delicado e romântico</p>
+                    </div>
                 </div>
+
                 <div class="projeto-item" onclick="abrirZoom(this)">
-                    <img src="img/img_02.png" alt="Home Office">
-                    <div class="projeto-info"><h3>Home Office</h3><p>Foco e organização</p></div>
-                </div>
+                    <img src="img/img_11.png" alt="Recepção de Clínica">
+                    <div class="projeto-info">
+                        <h3>Clínica e Bem-estar</h3>
+                        <p>Design biofílico e recepção acolhedora</p>
+                    </div>
+                </div>           
+
                 <div class="projeto-item" onclick="abrirZoom(this)">
-                    <img src="img/img_03.png" alt="Sala TV">
-                    <div class="projeto-info"><h3>Sala de TV</h3><p>Marcenaria inteligente</p></div>
+                    <img src="img/img_13.png" alt="Cozinha Contemporânea">
+                    <div class="projeto-info">
+                        <h3>Cozinha Contemporânea</h3>
+                        <p>Funcionalidade em tons neutros</p>
+                    </div>
                 </div>
+
+                <div class="projeto-item" onclick="abrirZoom(this)">
+                    <img src="img/img_14.png" alt="Sala de Jantar Integrada">
+                    <div class="projeto-info">
+                        <h3>Jantar Integrado</h3>
+                        <p>Tons amadeirados trazendo conforto</p>
+                    </div>
+                </div>
+
+                <div class="projeto-item" onclick="abrirZoom(this)">
+                    <img src="img/img_16.png" alt="Sala de Estar Moderna">
+                    <div class="projeto-info">
+                        <h3>Living Moderno</h3>
+                        <p>Painel ripado e toques de cor</p>
+                    </div>
+                </div>
+
                 <div class="projeto-item" onclick="abrirZoom(this)">
                     <img src="img/img_04.png" alt="Loft">
-                    <div class="projeto-info"><h3>Loft Integrado</h3><p>Conceito aberto</p></div>
+                    <div class="projeto-info">
+                        <h3>Loft Integrado</h3>
+                        <p>Conceito aberto</p></div>
                 </div>
+
                 <div class="projeto-item" onclick="abrirZoom(this)">
                     <img src="img/img_05.png" alt="Cozinha">
-                    <div class="projeto-info"><h3>Cozinha Ampla</h3><p>Modernidade</p></div>
+                    <div class="projeto-info">
+                        <h3>Cozinha Ampla</h3>
+                        <p>Modernidade</p></div>
                 </div>
+
                 <div class="projeto-item" onclick="abrirZoom(this)">
                     <img src="img/img_06.png" alt="Quarto">
-                    <div class="projeto-info"><h3>Quarto Casal</h3><p>Aconchego e sofisticação</p></div>
+                    <div class="projeto-info">
+                        <h3>Quarto Casal</h3>
+                        <p>Aconchego e sofisticação</p></div>
                 </div>
+
+                <div class="projeto-item" onclick="abrirZoom(this)">
+                    <img src="img/img_01.png" alt="Varanda Gourmet">
+                    <div class="projeto-info">
+                        <h3>Varanda Gourmet</h3>
+                        <p>Ambiente integrado para receber</p></div>
+                </div>
+
+                <div class="projeto-item" onclick="abrirZoom(this)">
+                    <img src="img/img_02.png" alt="Home Office">
+                    <div class="projeto-info">
+                        <h3>Home Office</h3>
+                        <p>Foco e organização</p></div>
+                </div>
+
+                <div class="projeto-item" onclick="abrirZoom(this)">
+                    <img src="img/img_03.png" alt="Sala TV">
+                    <div class="projeto-info">
+                        <h3>Sala de TV</h3>
+                        <p>Marcenaria inteligente</p></div>
+                </div>
+ 
             </div>
         </div>
     </section>
 
-    <div id="lightbox" onclick="fecharZoom()">
+    <div id="lightbox" onclick="fecharZoom(event)">
         <span class="fechar-zoom">&times;</span>
+        <button class="seta-zoom seta-esq" onclick="mudarImagemZoom(-1)">&#10094;</button>
         <img id="imgZoom" src="" alt="Zoom">
+        <button class="seta-zoom seta-dir" onclick="mudarImagemZoom(1)">&#10095;</button>
     </div>
 
     <div id="modalOrcamento" class="modal-overlay">
@@ -547,7 +651,7 @@
 
             <div id="msgSucesso">
                 <h3>Mensagem Enviada!</h3>
-                <p>Obrigada. Recebi seus dados e entrarei em contato pelo WhatsApp em até 24h para conversarmos sobre seu projeto.</p>
+                <p>Obrigada! Recebi seus dados com sucesso. Vou analisar suas respostas e entrarei em contato pelo WhatsApp em até 2 dias úteis para conversarmos sobre o seu projeto.</p>
                 <button onclick="fecharModal()" class="btn">Fechar</button>
             </div>
             
@@ -593,14 +697,39 @@
         prevBtn.addEventListener('click', () => { index--; updateCarrossel(); });
         window.addEventListener('resize', updateCarrossel);
 
-        /* ZOOM (LIGHTBOX) */
+        /* NAVEGAÇÃO DO ZOOM (LIGHTBOX) */
+        let indexZoom = 0; // Guarda qual imagem está aberta
+        let imagensGaleria = []; // Vai guardar a lista de todas as imagens
+
         function abrirZoom(elemento) {
-            const src = elemento.querySelector('img').src;
-            document.getElementById('imgZoom').src = src;
+            // Pega todas as imagens do carrossel no momento do clique
+            imagensGaleria = Array.from(document.querySelectorAll('.projeto-item img'));
+            
+            const imgClicada = elemento.querySelector('img');
+            indexZoom = imagensGaleria.indexOf(imgClicada); // Descobre o número da imagem clicada
+            
+            document.getElementById('imgZoom').src = imgClicada.src;
             document.getElementById('lightbox').style.display = 'flex';
         }
-        function fecharZoom() {
-            document.getElementById('lightbox').style.display = 'none';
+
+        function mudarImagemZoom(direcao) {
+            indexZoom += direcao; // Soma +1 (direita) ou -1 (esquerda)
+            
+            // Lógica para criar um "loop" infinito
+            if (indexZoom >= imagensGaleria.length) {
+                indexZoom = 0; // Volta pra primeira se passar da última
+            } else if (indexZoom < 0) {
+                indexZoom = imagensGaleria.length - 1; // Vai pra última se voltar antes da primeira
+            }
+            
+            document.getElementById('imgZoom').src = imagensGaleria[indexZoom].src;
+        }
+
+        function fecharZoom(event) {
+            // Só fecha o modal se a pessoa clicar no fundo escuro (id='lightbox') ou no "X"
+            if (!event || event.target.id === 'lightbox' || event.target.classList.contains('fechar-zoom')) {
+                document.getElementById('lightbox').style.display = 'none';
+            }
         }
 
         /* LÓGICA DO MODAL */
