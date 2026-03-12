@@ -208,7 +208,7 @@
             overflow: hidden;
             border-radius: 4px;
             height: 400px;
-            cursor: zoom-in;
+            cursor: zoom-in; /* Cursor indicando zoom */
         }
 
         .projeto-item img {
@@ -249,57 +249,26 @@
 
         .seta:hover { background-color: var(--cor-destaque); color: white; }
 
-        /* === LIGHTBOX (ZOOM COM NAVEGAÇÃO) === */
+        /* === LIGHTBOX (ZOOM) === */
         #lightbox {
             display: none;
             position: fixed;
             z-index: 3000;
             top: 0; left: 0;
             width: 100%; height: 100%;
-            background: rgba(0,0,0,0.95);
+            background: rgba(0,0,0,0.9);
             align-items: center; justify-content: center;
         }
-        
         #lightbox img {
-            max-width: 85%; max-height: 85vh;
+            max-width: 90%; max-height: 80vh;
             box-shadow: 0 0 20px rgba(0,0,0,0.5);
             border-radius: 4px;
-            transition: opacity 0.3s;
         }
-
         .fechar-zoom {
             position: absolute;
             top: 30px; right: 40px;
             color: white; font-size: 40px; cursor: pointer;
-            z-index: 3001;
         }
-
-        /* Novas setas exclusivas para o modo Zoom */
-        .seta-zoom {
-            position: absolute;
-            top: 50%;
-            transform: translateY(-50%);
-            background: rgba(255, 255, 255, 0.1);
-            color: white;
-            border: none;
-            width: 60px;
-            height: 60px;
-            border-radius: 50%;
-            cursor: pointer;
-            font-size: 24px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: background 0.3s;
-            z-index: 3001;
-        }
-
-        .seta-zoom:hover {
-            background: rgba(255, 255, 255, 0.4);
-        }
-
-        .seta-esq { left: 30px; }
-        .seta-dir { right: 30px; }
 
         /* === FORMULÁRIO MODAL === */
         .modal-overlay {
@@ -381,22 +350,15 @@
         @media (max-width: 768px) {
             .sobre { 
                 grid-template-columns: 1fr; 
-                padding: 60px 5%; 
+                padding: 60px 5%; /* Reduzido o espaçamento lateral/superior para celular */
             }
             .sobre-texto p {
-                text-align: left; 
+                text-align: left; /* <-- Ajuste adicionado para evitar os espaços grandes no texto no celular */
             }
             .hero h1 { font-size: 2.5rem; }
             .projeto-item { flex: 0 0 100%; }
             nav ul { display: none; }
             
-            /* Ajuste do Zoom no Celular */
-            .seta-zoom { width: 40px; height: 40px; font-size: 16px; }
-            .seta-esq { left: 10px; }
-            .seta-dir { right: 10px; }
-            .fechar-zoom { top: 15px; right: 20px; font-size: 30px; }
-            #lightbox img { max-width: 95%; }
-
             /* Ajuste do Formulário no Celular */
             .form-grid { grid-template-columns: 1fr; }
             .full-width { grid-column: span 1; }
@@ -425,7 +387,8 @@
     <section id="inicio" class="hero">
         <img src="img/logo.png" alt="Logo Rafa Scharf Design de Interiores" class="hero-logo">
         <h1>Design com Propósito</h1>
-        <p>Transformando espaços em experiências únicas e acolhedoras.</p>
+        <p>Que une estética, conforto e funcionalidade<br>
+        transformando espaços em experiências únicas e acolhedoras.</p>
     </section>
 
     <section id="sobre" class="sobre">
@@ -538,11 +501,9 @@
         </div>
     </section>
 
-    <div id="lightbox" onclick="fecharZoom(event)">
+    <div id="lightbox" onclick="fecharZoom()">
         <span class="fechar-zoom">&times;</span>
-        <button class="seta-zoom seta-esq" onclick="mudarImagemZoom(-1)">&#10094;</button>
         <img id="imgZoom" src="" alt="Zoom">
-        <button class="seta-zoom seta-dir" onclick="mudarImagemZoom(1)">&#10095;</button>
     </div>
 
     <div id="modalOrcamento" class="modal-overlay">
@@ -660,7 +621,7 @@
 
     <section id="contato" class="contato">   
         <h2>Vamos conversar?</h2>
-        <p>Transforme o seu sonho em realidade.</p>
+        <p>Transforme o seu sonho em realidade.</p><br>
         <button onclick="abrirModal()" class="btn">Solicitar Orçamento</button>
         <br><br>
         <div class="contatos-links">
@@ -697,39 +658,14 @@
         prevBtn.addEventListener('click', () => { index--; updateCarrossel(); });
         window.addEventListener('resize', updateCarrossel);
 
-        /* NAVEGAÇÃO DO ZOOM (LIGHTBOX) */
-        let indexZoom = 0; // Guarda qual imagem está aberta
-        let imagensGaleria = []; // Vai guardar a lista de todas as imagens
-
+        /* ZOOM (LIGHTBOX) */
         function abrirZoom(elemento) {
-            // Pega todas as imagens do carrossel no momento do clique
-            imagensGaleria = Array.from(document.querySelectorAll('.projeto-item img'));
-            
-            const imgClicada = elemento.querySelector('img');
-            indexZoom = imagensGaleria.indexOf(imgClicada); // Descobre o número da imagem clicada
-            
-            document.getElementById('imgZoom').src = imgClicada.src;
+            const src = elemento.querySelector('img').src;
+            document.getElementById('imgZoom').src = src;
             document.getElementById('lightbox').style.display = 'flex';
         }
-
-        function mudarImagemZoom(direcao) {
-            indexZoom += direcao; // Soma +1 (direita) ou -1 (esquerda)
-            
-            // Lógica para criar um "loop" infinito
-            if (indexZoom >= imagensGaleria.length) {
-                indexZoom = 0; // Volta pra primeira se passar da última
-            } else if (indexZoom < 0) {
-                indexZoom = imagensGaleria.length - 1; // Vai pra última se voltar antes da primeira
-            }
-            
-            document.getElementById('imgZoom').src = imagensGaleria[indexZoom].src;
-        }
-
-        function fecharZoom(event) {
-            // Só fecha o modal se a pessoa clicar no fundo escuro (id='lightbox') ou no "X"
-            if (!event || event.target.id === 'lightbox' || event.target.classList.contains('fechar-zoom')) {
-                document.getElementById('lightbox').style.display = 'none';
-            }
+        function fecharZoom() {
+            document.getElementById('lightbox').style.display = 'none';
         }
 
         /* LÓGICA DO MODAL */
