@@ -350,10 +350,10 @@
         @media (max-width: 768px) {
             .sobre { 
                 grid-template-columns: 1fr; 
-                padding: 60px 5%; /* Reduzido o espaçamento lateral/superior para celular */
+                padding: 60px 5%; 
             }
             .sobre-texto p {
-                text-align: left; /* <-- Ajuste adicionado para evitar os espaços grandes no texto no celular */
+                text-align: left; 
             }
             .hero h1 { font-size: 2.5rem; }
             .projeto-item { flex: 0 0 100%; }
@@ -689,7 +689,7 @@
             if (event.target == modal) { fecharModal(); }
         }
 
-        /* LÓGICA DE ENVIO (NETLIFY + SUCESSO NO MODAL) */
+        /* LÓGICA DE ENVIO  */
         const formulario = document.getElementById('meuForm');
         formulario.onsubmit = function(e) {
             e.preventDefault();
